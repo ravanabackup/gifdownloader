@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GIF Downloader</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #333;
+            color: #fff;
+        }
+        .container {
+            text-align: center;
+        }
+        input[type="text"] {
+            width: 80%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: none;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #555;
+            color: #fff;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #777;
+        }
+        #gifContainer {
+            margin-top: 20px;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #fff;
+            border-radius: 5px;
+        }
+        #message {
+            margin-top: 10px;
+            font-size: 1em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>GIF Downloader</h1>
+        <input type="text" id="gifLink" placeholder="Enter Tenor or Giphy GIF URL">
+        <button onclick="processLink()">Show GIF</button>
+        <div id="gifContainer"></div>
+        <div id="message"></div>
+    </div>
+    <script>
+        function processLink() {
+            const input = document.getElementById('gifLink').value;
+            const tenorRegex = /https:\/\/media[0-9]*\.tenor\.com\/m\/([a-zA-Z0-9_-]+)\/.+/;
+            const giphyRegex = /https:\/\/giphy\.com\/gifs\/[a-zA-Z0-9_-]+-([a-zA-Z0-9]+)$/;
+            const messageElement = document.getElementById('message');
+            const gifContainer = document.getElementById('gifContainer');
+
+            let gifUrl = '';
+
+            if (tenorRegex.test(input)) {
+                const match = input.match(tenorRegex);
+                if (match && match[1]) {
+                    const gifId = match[1];
+                    gifUrl = `https://c.tenor.com/${gifId}/tenor.gif`;
+                }
+            } else if (giphyRegex.test(input)) {
+                const match = input.match(giphyRegex);
+                if (match && match[1]) {
+                    const gifId = match[1];
+                    gifUrl = `https://i.giphy.com/${gifId}.webp`;
+                }
+            } else {
+                messageElement.innerText = 'Invalid URL. Please try again.';
+                gifContainer.innerHTML = '';
+                return;
+            }
+
+            if (gifUrl) {
+                gifContainer.innerHTML = `<img src="${gifUrl}" alt="GIF">`;
+                messageElement.innerText = '';
+            } else {
+                messageElement.innerText = 'Failed to process the URL. Please try again.';
+                gifContainer.innerHTML = '';
+            }
+        }
+    </script>
+</body>
+</html>
